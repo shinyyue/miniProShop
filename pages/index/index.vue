@@ -8,13 +8,11 @@
 						搜索商品</navigator>
 				</view>
 			</view>
-			<tabNav class="tabNav" :tabTitle="navTop" @changeTab='changeTab'></tabNav>
 		</view>
 		<!-- 首页展示 -->
-		<view class="page_content" :style="'margin-top:'+(marTop+30)+'px;'" v-if="navIndex == 0">
-			<!-- <view class="mp-bg"></view> -->
+		<view class="page_content" :style="'margin-top:'+ marTop +'px;'" v-if="navIndex == 0">
 			<!-- banner -->
-			<view class="swiper" v-if="imgUrls.length">
+			<view class="swiper" v-if="imgUrls.length"> 
 				<swiper indicator-dots="true" :autoplay="true" :circular="circular" :interval="interval" :duration="duration"
 				 indicator-color="rgba(255,255,255,0.6)" indicator-active-color="#fff">
 					<block v-for="(item,index) in imgUrls" :key="index">
@@ -29,13 +27,13 @@
 			<!-- menu -->
 			<view class='nav acea-row' v-if="menus.length">
 				<block v-for="(item,index) in menus" :key="index">
-					<navigator class='item' v-if="item.show == '1'" :url='item.url' open-type='switchTab' hover-class='none'>
+					<navigator class='item' v-if="index < 4" :url='item.url' open-type='switchTab' hover-class='none'>
 						<view class='pictrue'>
 							<image :src='item.pic'></image>
 						</view>
 						<view class="menu-txt">{{item.name}}</view>
 					</navigator>
-					<navigator class='item' v-else :url='item.url' hover-class='none'>
+					<navigator class='item' v-else-if="index >= 4 && index < 8" :url='item.url' open-type='switchTab' hover-class='none'>
 						<view class='pictrue'>
 							<image :src='item.pic'></image>
 						</view>
@@ -49,7 +47,7 @@
 					<image src="/static/images/explosion-title.png" mode=""></image>
 					<view class="txt">美好生活由此开始</view>
 				</view>
-				<view class="bd">
+				<!-- <view class="bd">
 					<navigator class="item" v-for="(item,index) in explosiveMoney" :key="index" :url="'/pages/columnGoods/HotNewGoods/index?type='+item.type"
 					 hover-class='none'>
 						<view class="con-box">
@@ -60,10 +58,10 @@
 						</view>
 						<image :src="item.image"></image>
 					</navigator>
-				</view>
+				</view> -->
 			</view>
 			<!-- 精品推荐 -->
-			<view class='boutique'>
+			<!-- <view class='boutique'>
 				<swiper autoplay="true" indicator-dots="true" :circular="circular" :interval="interval" :duration="duration"
 				 indicator-color="rgba(0,0,0,.4)" indicator-active-color="#fff">
 					<block v-for="(item,index) in bastBanner" :key="index">
@@ -74,9 +72,9 @@
 						</swiper-item>
 					</block>
 				</swiper>
-			</view>
+			</view> -->
 			<!-- 首页推荐 -->
-			<view class="index-product-wrapper" :class="iSshowH?'on':''">
+			<!-- <view class="index-product-wrapper" :class="iSshowH?'on':''">
 				<view class="nav-bd">
 					<view class="item" v-for="(item,index) in explosiveMoney" :key="index" :index="item.id" :class="{active:index == ProductNavindex}"
 					 @click="ProductNavTab(item,index)">
@@ -84,7 +82,6 @@
 						<view class="label">{{item.info}}</view>
 					</view>
 				</view>
-				<!-- 首发新品 -->
 				<view class="list-box animated" :class='tempArr.length > 0?"fadeIn on":""'>
 					<view class="item" v-for="(item,index) in tempArr" :key="index" @click="goDetail(item)">
 						<view class="pictrue">
@@ -109,10 +106,31 @@
 				<view class="mores-txt flex" v-if="!goodScroll">
 					<text>我是有底线的</text>
 				</view>
+			</view> -->
+			<!-- 热门商品列表 -->
+			<view class="index-product-wrapper" :class="iSshowH?'on':''">
+				<view class="list-box animated" :class='tempArr.length > 0?"fadeIn on":""'>
+					<view class="item" v-for="(item,index) in tempArr" :key="index" @click="goDetail(item)">
+						<view class="pictrue">
+							<span class="pictrue_log pictrue_log_class" v-if="item.activity && item.activity.type === '1'">秒杀</span>
+							<span class="pictrue_log pictrue_log_class" v-if="item.activity && item.activity.type === '2'">砍价</span>
+							<span class="pictrue_log pictrue_log_class" v-if="item.activity && item.activity.type === '3'">拼团</span>
+							<image :src="item.image" mode=""></image>
+						</view>
+						<view class="text-info">
+							<view class="title line1">{{item.storeName}}</view>
+							<view class="old-price"><text>¥</text>{{item.otPrice}}</view>
+							<view class="price">
+								<text>￥</text>{{item.price}}
+								<view class="txt" v-if="item.checkCoupon">券</view>
+							</view>
+						</view>
+					</view>
+				</view>
 			</view>
 		</view>
 		<!-- 分类页 -->
-		<view class="productList" v-if="navIndex>0" :style="'margin-top:'+prodeuctTop+'px'">
+		<!-- <view class="productList" v-if="navIndex>0" :style="'margin-top:'+prodeuctTop+'px'">
 			<block v-if="sortProduct.length>0">
 				<view class='list acea-row row-between-wrapper' :class='is_switch==true?"":"on"'>
 					<view class='item' :class='is_switch==true?"":"on"' hover-class='none' v-for="(item,index) in sortProduct" :key="index"
@@ -146,9 +164,8 @@
 					</view>
 					<recommend :hostProduct="hostProduct"></recommend>
 				</view>
-
 			</block>
-		</view>
+		</view> -->
 		<coupon-window :window='window' :couponList="couponList" @onColse="onColse"></coupon-window>
 		<!-- #ifdef MP -->
 		<authorize @onLoadFun="onLoadFun" :isAuto="isAuto" :isShowAuth="isShowAuth" @authColse="authColse" :isGoIndex="false"></authorize>
@@ -175,13 +192,8 @@
 	// 	TIPS_KEY
 	// } from '@/config/cache';
 	// #endif
-	// #ifdef H5  
 	import {
-		follow
-	} from '@/api/public.js';
-	// #endif
-	import {
-		getShare
+		getShare 
 	} from '@/api/public.js';
 	import goodList from '@/components/goodList';
 	import promotionGood from '@/components/promotionGood';
@@ -193,7 +205,6 @@
 	import {
 		mapGetters
 	} from "vuex";
-	import tabNav from '@/components/tabNav.vue'
 	import countDown from '@/components/countDown';
 	import {
 		getCategoryList,
@@ -219,7 +230,6 @@
 	export default {
 		computed: mapGetters(['isLogin', 'uid']),
 		components: {
-			tabNav,
 			goodList,
 			promotionGood,
 			couponWindow,
@@ -687,7 +697,8 @@
 				getGroomList(type, this.params).then(({
 					data
 				}) => {
-					this.iSshowH = false
+					console.log(2222, data)
+					this.iSshowH = false 
 					this.loading = false
 					this.goodScroll = data.list.length >= this.params.limit
 					this.params.page++
@@ -815,15 +826,14 @@
 					}
 				}
 			}
-
-			.tabNav {
-				padding-top: 24rpx;
-			}
 		}
 
-		/* #ifdef MP */
 		.mp-header {
 			width: 100%;
+			position: fixed;
+			top: 0;
+			z-index: 9999;
+			background: gray;
 			.serch-wrapper {
 				height: 100%;
 				align-items: center;
@@ -854,32 +864,21 @@
 			}
 		}
 
-		/* #endif */
-
 		.page_content {
-			/* #ifdef H5 */
-			margin-top: -140rpx !important;
-			/* #endif */
-			padding: 0 20rpx;
-
 			.swiper {
 				background: red;
 				position: relative;
-				width: 710rpx;
-				height: 280rpx;
+				width: 100%;
+				height: 350rpx;
 				margin: 0 auto;
-				border-radius: 10rpx;
 				overflow: hidden;
-				/* #ifdef MP */
 				z-index: 10;
-
-				/* #endif */
 				swiper,
 				.swiper-item,
 				image {
 					width: 100%;
 					height: 280rpx;
-					border-radius: 10rpx;
+					// border-radius: 10rpx;
 				}
 			}
 
@@ -892,12 +891,13 @@
 					flex-direction: column;
 					align-items: center;
 					justify-content: center;
-					width: 20%;
+					width: 25%;
 					margin-top: 30rpx;
-
+					padding: 5;
+					// todo:
 					image {
-						width: 82rpx;
-						height: 82rpx;
+						width: 150rpx;
+						height: 150rpx;
 					}
 				}
 			}
@@ -1001,11 +1001,11 @@
 
 			.explosion {
 				width: 100%;
-				height: 500rpx;
+				// height: 500rpx;
 				margin-top: 20rpx;
 				padding: 30rpx 20rpx;
-				background-image: url('~@/static/images/explosion.png');
-				background-size: 100% 100%;
+				// background-image: url('~@/static/images/explosion.png');
+				// background-size: 100% 100%;
 				border-radius: 13px;
 
 				.hd {
